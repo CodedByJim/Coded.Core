@@ -1,0 +1,357 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Coded.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Coded.Core.Data.ConnectionFactory`1">
+            <summary>
+                Creates connections based on the IDbConnection type and connection string
+            </summary>
+            <typeparam name="TDbConnection">Type of the connection</typeparam>
+        </member>
+        <member name="M:Coded.Core.Data.ConnectionFactory`1.#ctor(System.String)">
+            <summary>
+                Create a new connection factory
+            </summary>
+            <param name="connectionString"></param>
+        </member>
+        <member name="M:Coded.Core.Data.ConnectionFactory`1.CreateConnection">
+            <inheritdoc />
+        </member>
+        <member name="T:Coded.Core.Data.DapperUnitOfWork">
+            <summary>
+                Represents a database transaction containing mutations that can be committed
+                or rolled-back atomically.
+            </summary>
+        </member>
+        <member name="M:Coded.Core.Data.DapperUnitOfWork.#ctor(Coded.Core.Data.IConnectionFactory)">
+            <summary>
+                Create a new unit of work
+            </summary>
+            <param name="connectionFactory">The connection factory</param>
+            <exception cref="T:System.ArgumentNullException">if the connection factory is null</exception>
+        </member>
+        <member name="M:Coded.Core.Data.DapperUnitOfWork.Commit">
+            <inheritdoc />
+        </member>
+        <member name="M:Coded.Core.Data.DapperUnitOfWork.Dispose">
+            <summary>
+                Disposes the unit of work.
+            </summary>
+        </member>
+        <member name="M:Coded.Core.Data.DapperUnitOfWork.ExecuteAsync(System.String,System.Threading.CancellationToken,System.Object,System.Nullable{System.Int32},System.Nullable{System.Data.CommandType},Dapper.CommandFlags)">
+            <inheritdoc />
+        </member>
+        <member name="M:Coded.Core.Data.DapperUnitOfWork.ExecuteScalarAsync``1(System.String,System.Threading.CancellationToken,System.Object,System.Nullable{System.Int32},System.Nullable{System.Data.CommandType},Dapper.CommandFlags)">
+            <inheritdoc />
+        </member>
+        <member name="M:Coded.Core.Data.DapperUnitOfWork.QuerySingleOrDefaultAsync``1(System.String,System.Threading.CancellationToken,System.Object,System.Nullable{System.Int32},System.Nullable{System.Data.CommandType},Dapper.CommandFlags)">
+            <inheritdoc />
+        </member>
+        <member name="M:Coded.Core.Data.DapperUnitOfWork.QueryAsync``1(System.String,System.Threading.CancellationToken,System.Object,System.Nullable{System.Int32},System.Nullable{System.Data.CommandType},Dapper.CommandFlags)">
+            <inheritdoc />
+        </member>
+        <member name="M:Coded.Core.Data.DapperUnitOfWork.Rollback">
+            <inheritdoc />
+        </member>
+        <member name="M:Coded.Core.Data.DapperUnitOfWork.Close">
+            <inheritdoc />
+        </member>
+        <member name="M:Coded.Core.Data.DapperUnitOfWork.Finalize">
+            <summary>
+                Destructor, disposes the unit of work
+            </summary>
+        </member>
+        <member name="T:Coded.Core.Data.IConnectionFactory">
+            <summary>
+                Creates connections
+            </summary>
+        </member>
+        <member name="M:Coded.Core.Data.IConnectionFactory.CreateConnection">
+            <summary>
+                Create a new connection
+            </summary>
+            <returns>The newly created connection</returns>
+        </member>
+        <member name="T:Coded.Core.Data.IUnitOfWork">
+            <summary>
+                Abstraction of an transaction
+            </summary>
+        </member>
+        <member name="M:Coded.Core.Data.IUnitOfWork.ExecuteAsync(System.String,System.Threading.CancellationToken,System.Object,System.Nullable{System.Int32},System.Nullable{System.Data.CommandType},Dapper.CommandFlags)">
+            <summary>
+                Execute the sql
+            </summary>
+            <param name="sql">The sql</param>
+            <param name="cancellationToken">The cancellation token</param>
+            <param name="param">Sql parameters object</param>
+            <param name="commandTimeout">Timeout for this command</param>
+            <param name="commandType">Type for this command</param>
+            <param name="flags">Command flags</param>
+            <returns>The number of records affected</returns>
+        </member>
+        <member name="M:Coded.Core.Data.IUnitOfWork.ExecuteScalarAsync``1(System.String,System.Threading.CancellationToken,System.Object,System.Nullable{System.Int32},System.Nullable{System.Data.CommandType},Dapper.CommandFlags)">
+            <summary>
+                Execute an sql statement and return it's scalar result
+            </summary>
+            <param name="sql">The sql to execute</param>
+            <param name="cancellationToken">The cancellation token</param>
+            <param name="param">Sql parameters object</param>
+            <param name="commandTimeout">The timeout for this command</param>
+            <param name="commandType">The type for this command</param>
+            <param name="flags">Command flags</param>
+            <typeparam name="T">The scalar result type</typeparam>
+            <returns>A single value of type <typeparamref name="T" />.</returns>
+        </member>
+        <member name="M:Coded.Core.Data.IUnitOfWork.QueryAsync``1(System.String,System.Threading.CancellationToken,System.Object,System.Nullable{System.Int32},System.Nullable{System.Data.CommandType},Dapper.CommandFlags)">
+            <summary>
+                Execute a query and return the records.
+            </summary>
+            <param name="sql">The sql to execute</param>
+            <param name="cancellationToken">The cancellation token</param>
+            <param name="param">SQL parameters object</param>
+            <param name="commandTimeout">The timout for this command</param>
+            <param name="commandType">The type for this command</param>
+            <param name="flags">Command flags</param>
+            <typeparam name="T">Record type</typeparam>
+            <returns>The result of the given query as an <see cref="T:System.Collections.Generic.IEnumerable`1" /> of type <typeparamref name="T" />.</returns>
+        </member>
+        <member name="M:Coded.Core.Data.IUnitOfWork.QuerySingleOrDefaultAsync``1(System.String,System.Threading.CancellationToken,System.Object,System.Nullable{System.Int32},System.Nullable{System.Data.CommandType},Dapper.CommandFlags)">
+            <summary>
+                Execute a query and return a single record.
+            </summary>
+            <param name="sql">The sql to execute</param>
+            <param name="cancellationToken">The cancellation token</param>
+            <param name="param">SQL parameters object</param>
+            <param name="commandTimeout">The timout for this command</param>
+            <param name="commandType">The type for this command</param>
+            <param name="flags">Command flags</param>
+            <typeparam name="T">Record type</typeparam>
+            <returns>The result of the given query as an <see cref="T:System.Collections.Generic.IEnumerable`1" /> of type <typeparamref name="T" />.</returns>
+        </member>
+        <member name="M:Coded.Core.Data.IUnitOfWork.Rollback">
+            <summary>
+                Rolls back this unit of work.
+            </summary>
+        </member>
+        <member name="M:Coded.Core.Data.IUnitOfWork.Close">
+            <summary>
+                Closes the connection.
+            </summary>
+        </member>
+        <member name="M:Coded.Core.Data.IUnitOfWork.Commit">
+            <summary>
+                Commits the mutations and closes the transaction
+            </summary>
+        </member>
+        <member name="T:Coded.Core.Data.UnitOfWorkScope`2">
+            <summary>
+                Handler decorator that manages a unit of work scope per request
+            </summary>
+            <typeparam name="TRequest">The incoming request type</typeparam>
+            <typeparam name="TResponse">The outgoing response type</typeparam>
+        </member>
+        <member name="M:Coded.Core.Data.UnitOfWorkScope`2.#ctor(Coded.Core.Handler.IHandler{`0,`1},Coded.Core.Data.IUnitOfWork)">
+            <summary>
+            Create a new unit of work scope
+            </summary>
+            <param name="decoratedHandler">The inner handler</param>
+            <param name="unitOfWork">The unit of work</param>
+        </member>
+        <member name="M:Coded.Core.Data.UnitOfWorkScope`2.Handle(`0,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Coded.Core.Events.FlushEventBusDecorator`2">
+            <summary>
+            Handler decorator that manages the event bus
+            </summary>
+            <typeparam name="TRequest">The incoming request</typeparam>
+            <typeparam name="TResponse">The outgoing</typeparam>
+        </member>
+        <member name="M:Coded.Core.Events.FlushEventBusDecorator`2.#ctor(Coded.Core.Handler.IHandler{`0,`1},Coded.Core.Events.IEventBus)">
+            <summary>
+            Creates a new <see cref="T:Coded.Core.Events.FlushEventBusDecorator`2"/>.
+            </summary>
+            <param name="decoratedHandler">The decorated handler.</param>
+            <param name="eventBus">The event bus</param>
+        </member>
+        <member name="M:Coded.Core.Events.FlushEventBusDecorator`2.Handle(`0,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Coded.Core.Events.IConsumer`1">
+            <summary>
+                Consumers are called when events of their consuming type happen.
+            </summary>
+            <typeparam name="TEvent"></typeparam>
+        </member>
+        <member name="M:Coded.Core.Events.IConsumer`1.ConsumeAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+                Process the event
+            </summary>
+            <param name="eventObject">The event object</param>
+            <param name="cancellationToken">Propagates notification that operations should be canceled</param>
+        </member>
+        <member name="T:Coded.Core.Events.IEventBus">
+            <summary>
+            Abstraction of an eventbus
+            </summary>
+        </member>
+        <member name="M:Coded.Core.Events.IEventBus.StartConsumingAsync(System.Threading.CancellationToken)">
+            <summary>
+            Start consuming events
+            </summary>
+            <param name="cancellationToken">The cancellation token</param>
+            <returns></returns>
+        </member>
+        <member name="M:Coded.Core.Events.IEventBus.PublishAsync``1(``0,System.Threading.CancellationToken)">
+            <summary>
+            Publish an event. Will be held in memory until it is flushed.
+            </summary>
+            <param name="eventObject">The event</param>
+            <param name="cancellationToken">The cancellation token</param>
+            <typeparam name="TEvent">The event type</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Coded.Core.Events.IEventBus.FlushAsync(System.Threading.CancellationToken)">
+            <summary>
+            Flush the published events to the eventbus.
+            </summary>
+            <param name="cancellationToken">The cancellation token</param>
+            <returns></returns>
+        </member>
+        <member name="T:Coded.Core.Events.InMemoryEventBus">
+            <summary>
+            Simple in memory event bus
+            </summary>
+        </member>
+        <member name="M:Coded.Core.Events.InMemoryEventBus.#ctor(SimpleInjector.Container)">
+            <summary>
+            Create a new <see cref="T:Coded.Core.Events.InMemoryEventBus"/>.
+            </summary>
+            <param name="container"></param>
+        </member>
+        <member name="M:Coded.Core.Events.InMemoryEventBus.StartConsumingAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Coded.Core.Events.InMemoryEventBus.PublishAsync``1(``0,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Coded.Core.Events.InMemoryEventBus.FlushAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Coded.Core.Handler.IHandler`2">
+            <summary>
+                Handles requests.
+            </summary>
+            <typeparam name="TRequest">The request type to handle</typeparam>
+            <typeparam name="TResponse">The response type to return</typeparam>
+        </member>
+        <member name="M:Coded.Core.Handler.IHandler`2.Handle(`0,System.Threading.CancellationToken)">
+            <summary>
+                Handle the request and return the corresponding response
+            </summary>
+            <param name="request">The request</param>
+            <param name="cancellationToken">The cancellation token</param>
+            <returns>A corresponding response</returns>
+        </member>
+        <member name="T:Coded.Core.Handler.IRequest`1">
+            <summary>
+            Request resulting in response of type <typeparamref name="TResponse"/>
+            </summary>
+            <typeparam name="TResponse"></typeparam>
+        </member>
+        <member name="T:Coded.Core.Mapping.IMapper`2">
+            <summary>
+            Maps an <typeparamref name="TSource"/> to an <typeparamref name="TDestination"/>
+            </summary>
+            <typeparam name="TSource">The source type</typeparam>
+            <typeparam name="TDestination">The destination type</typeparam>
+        </member>
+        <member name="M:Coded.Core.Mapping.IMapper`2.Map(`0)">
+            <summary>
+            Map the source object to te destination object
+            </summary>
+            <param name="sourceObject">The source object</param>
+            <returns>A mapped <typeparamref name="TDestination"/> object</returns>
+        </member>
+        <member name="T:Coded.Core.Query.IQuery`2">
+            <summary>
+                Generic query interface
+            </summary>
+            <typeparam name="TQueryArguments">The query arguments type</typeparam>
+            <typeparam name="TQueryResult">The result type</typeparam>
+        </member>
+        <member name="M:Coded.Core.Query.IQuery`2.Query(`0,System.Threading.CancellationToken)">
+            <summary>
+                Execute the query and return the results
+            </summary>
+            <param name="arguments">The query arguments</param>
+            <param name="cancellationToken">Cancellation token</param>
+            <returns>The result of the query</returns>
+        </member>
+        <member name="T:Coded.Core.Query.IQueryArguments`1">
+            <summary>
+            Arguments for query
+            </summary>
+            <typeparam name="TResult">The result type of this query.</typeparam>
+        </member>
+        <member name="T:Coded.Core.Validation.ComponentModelValidator`1">
+            <summary>
+            Validates object with the component model validator
+            </summary>
+            <typeparam name="T">The type to validate</typeparam>
+        </member>
+        <member name="M:Coded.Core.Validation.ComponentModelValidator`1.Validate(`0)">
+            <inheritdoc />
+        </member>
+        <member name="T:Coded.Core.Validation.IoValidationHandlerDecorator`2">
+            <summary>
+            Handler decorator that validates input and output against it's registered validators.
+            </summary>
+            <typeparam name="TRequest">The request type</typeparam>
+            <typeparam name="TResponse">The response type</typeparam>
+        </member>
+        <member name="M:Coded.Core.Validation.IoValidationHandlerDecorator`2.#ctor(Coded.Core.Handler.IHandler{`0,`1},Coded.Core.Validation.IValidator{`0},Coded.Core.Validation.IValidator{`1})">
+            <summary>
+            Create a new <see cref="T:Coded.Core.Validation.IoValidationHandlerDecorator`2"/>
+            </summary>
+            <param name="decoratedHandler">The decorated handler</param>
+            <param name="requestValidator">The validator for the request type</param>
+            <param name="responseValidator">The validator for the response type</param>
+        </member>
+        <member name="M:Coded.Core.Validation.IoValidationHandlerDecorator`2.Handle(`0,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Coded.Core.Validation.IoValidationQueryDecorator`2">
+            <summary>
+            Decorator that validates the input and output of queries.
+            </summary>
+            <typeparam name="TQueryArguments">The query argument type</typeparam>
+            <typeparam name="TResult">The query result type</typeparam>
+        </member>
+        <member name="M:Coded.Core.Validation.IoValidationQueryDecorator`2.#ctor(Coded.Core.Query.IQuery{`0,`1},Coded.Core.Validation.IValidator{`0},Coded.Core.Validation.IValidator{`1})">
+            <summary>
+            Create a new <see cref="T:Coded.Core.Validation.IoValidationHandlerDecorator`2"/>
+            </summary>
+            <param name="decoratedQuery">The query to decorate.</param>
+            <param name="queryArgumentsValidator">The validator for the query arguments.</param>
+            <param name="queryResultValidator">The validator for the query result.</param>
+        </member>
+        <member name="M:Coded.Core.Validation.IoValidationQueryDecorator`2.Query(`0,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Coded.Core.Validation.IValidator`1">
+            <summary>
+            Validator for type <typeparamref name="T"/>
+            </summary>
+            <typeparam name="T">The type to validate.</typeparam>
+        </member>
+        <member name="M:Coded.Core.Validation.IValidator`1.Validate(`0)">
+            <summary>
+            Validate the instance
+            </summary>
+            <param name="instance">The instance to validate</param>
+        </member>
+    </members>
+</doc>
