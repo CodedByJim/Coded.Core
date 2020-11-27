@@ -9,7 +9,7 @@ namespace Coded.Core.Validation
         /// <summary>
         ///     Validate the instance
         /// </summary>
-        /// <param name="instance">The instance to validate</param>
-        void Validate(T instance);
+        /// <param name="rootObject">The instance to validate</param>
+        void Validate(T rootObject);
     }
 }

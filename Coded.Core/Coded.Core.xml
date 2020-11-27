@@ -154,7 +154,7 @@
         </member>
         <member name="M:Coded.Core.Data.UnitOfWorkScope`2.#ctor(Coded.Core.Handler.IHandler{`0,`1},Coded.Core.Data.IUnitOfWork)">
             <summary>
-            Create a new unit of work scope
+                Create a new unit of work scope
             </summary>
             <param name="decoratedHandler">The inner handler</param>
             <param name="unitOfWork">The unit of work</param>
@@ -164,14 +164,14 @@
         </member>
         <member name="T:Coded.Core.Events.FlushEventBusDecorator`2">
             <summary>
-            Handler decorator that manages the event bus
+                Handler decorator that manages the event bus
             </summary>
             <typeparam name="TRequest">The incoming request</typeparam>
             <typeparam name="TResponse">The outgoing</typeparam>
         </member>
         <member name="M:Coded.Core.Events.FlushEventBusDecorator`2.#ctor(Coded.Core.Handler.IHandler{`0,`1},Coded.Core.Events.IEventBus)">
             <summary>
-            Creates a new <see cref="T:Coded.Core.Events.FlushEventBusDecorator`2"/>.
+                Creates a new <see cref="T:Coded.Core.Events.FlushEventBusDecorator`2" />.
             </summary>
             <param name="decoratedHandler">The decorated handler.</param>
             <param name="eventBus">The event bus</param>
@@ -194,19 +194,19 @@
         </member>
         <member name="T:Coded.Core.Events.IEventBus">
             <summary>
-            Abstraction of an eventbus
+                Abstraction of an eventbus
             </summary>
         </member>
         <member name="M:Coded.Core.Events.IEventBus.StartConsumingAsync(System.Threading.CancellationToken)">
             <summary>
-            Start consuming events
+                Start consuming events
             </summary>
             <param name="cancellationToken">The cancellation token</param>
             <returns></returns>
         </member>
         <member name="M:Coded.Core.Events.IEventBus.PublishAsync``1(``0,System.Threading.CancellationToken)">
             <summary>
-            Publish an event. Will be held in memory until it is flushed.
+                Publish an event. Will be held in memory until it is flushed.
             </summary>
             <param name="eventObject">The event</param>
             <param name="cancellationToken">The cancellation token</param>
@@ -215,19 +215,19 @@
         </member>
         <member name="M:Coded.Core.Events.IEventBus.FlushAsync(System.Threading.CancellationToken)">
             <summary>
-            Flush the published events to the eventbus.
+                Flush the published events to the eventbus.
             </summary>
             <param name="cancellationToken">The cancellation token</param>
             <returns></returns>
         </member>
         <member name="T:Coded.Core.Events.InMemoryEventBus">
             <summary>
-            Simple in memory event bus
+                Simple in memory event bus
             </summary>
         </member>
         <member name="M:Coded.Core.Events.InMemoryEventBus.#ctor(SimpleInjector.Container)">
             <summary>
-            Create a new <see cref="T:Coded.Core.Events.InMemoryEventBus"/>.
+                Create a new <see cref="T:Coded.Core.Events.InMemoryEventBus" />.
             </summary>
             <param name="container"></param>
         </member>
@@ -257,23 +257,23 @@
         </member>
         <member name="T:Coded.Core.Handler.IRequest`1">
             <summary>
-            Request resulting in response of type <typeparamref name="TResponse"/>
+                Request resulting in response of type <typeparamref name="TResponse" />
             </summary>
             <typeparam name="TResponse"></typeparam>
         </member>
         <member name="T:Coded.Core.Mapping.IMapper`2">
             <summary>
-            Maps an <typeparamref name="TSource"/> to an <typeparamref name="TDestination"/>
+                Maps an <typeparamref name="TSource" /> to an <typeparamref name="TDestination" />
             </summary>
             <typeparam name="TSource">The source type</typeparam>
             <typeparam name="TDestination">The destination type</typeparam>
         </member>
         <member name="M:Coded.Core.Mapping.IMapper`2.Map(`0)">
             <summary>
-            Map the source object to te destination object
+                Map the source object to te destination object
             </summary>
             <param name="sourceObject">The source object</param>
-            <returns>A mapped <typeparamref name="TDestination"/> object</returns>
+            <returns>A mapped <typeparamref name="TDestination" /> object</returns>
         </member>
         <member name="T:Coded.Core.Query.IQuery`2">
             <summary>
@@ -292,13 +292,36 @@
         </member>
         <member name="T:Coded.Core.Query.IQueryArguments`1">
             <summary>
-            Arguments for query
+                Arguments for query
             </summary>
             <typeparam name="TResult">The result type of this query.</typeparam>
         </member>
+        <member name="T:Coded.Core.Testing.TestExtensions">
+            <summary>
+                Handy extensions which can be used for unit testing purposes.
+            </summary>
+        </member>
+        <member name="M:Coded.Core.Testing.TestExtensions.SetupHandle``2(Moq.Mock{Coded.Core.Handler.IHandler{``0,``1}},System.Func{``0,``1})">
+            <summary>
+                Setup a mock <see cref="T:Coded.Core.Handler.IHandler`2" />.
+            </summary>
+            <param name="handlerMock">The mock object.</param>
+            <param name="mockMethod">The mock method implementation.</param>
+            <typeparam name="TRequest">The request type.</typeparam>
+            <typeparam name="TResponse">The response type.</typeparam>
+        </member>
+        <member name="M:Coded.Core.Testing.TestExtensions.SetupQuery``2(Moq.Mock{Coded.Core.Query.IQuery{``0,``1}},System.Func{``0,``1})">
+            <summary>
+                Setup a mock <see cref="T:Coded.Core.Query.IQuery`2" />.
+            </summary>
+            <param name="queryMock">The query mock.</param>
+            <param name="mockMethod">The mock method implementation.</param>
+            <typeparam name="TQueryArguments">The query argument type.</typeparam>
+            <typeparam name="TQueryResult">The query result type.</typeparam>
+        </member>
         <member name="T:Coded.Core.Validation.ComponentModelValidator`1">
             <summary>
-            Validates object with the component model validator
+                Validates object with the component model validator
             </summary>
             <typeparam name="T">The type to validate</typeparam>
         </member>
@@ -307,14 +330,14 @@
         </member>
         <member name="T:Coded.Core.Validation.IoValidationHandlerDecorator`2">
             <summary>
-            Handler decorator that validates input and output against it's registered validators.
+                Handler decorator that validates input and output against it's registered validators.
             </summary>
             <typeparam name="TRequest">The request type</typeparam>
             <typeparam name="TResponse">The response type</typeparam>
         </member>
         <member name="M:Coded.Core.Validation.IoValidationHandlerDecorator`2.#ctor(Coded.Core.Handler.IHandler{`0,`1},Coded.Core.Validation.IValidator{`0},Coded.Core.Validation.IValidator{`1})">
             <summary>
-            Create a new <see cref="T:Coded.Core.Validation.IoValidationHandlerDecorator`2"/>
+                Create a new <see cref="T:Coded.Core.Validation.IoValidationHandlerDecorator`2" />
             </summary>
             <param name="decoratedHandler">The decorated handler</param>
             <param name="requestValidator">The validator for the request type</param>
@@ -325,14 +348,14 @@
         </member>
         <member name="T:Coded.Core.Validation.IoValidationQueryDecorator`2">
             <summary>
-            Decorator that validates the input and output of queries.
+                Decorator that validates the input and output of queries.
             </summary>
             <typeparam name="TQueryArguments">The query argument type</typeparam>
             <typeparam name="TResult">The query result type</typeparam>
         </member>
         <member name="M:Coded.Core.Validation.IoValidationQueryDecorator`2.#ctor(Coded.Core.Query.IQuery{`0,`1},Coded.Core.Validation.IValidator{`0},Coded.Core.Validation.IValidator{`1})">
             <summary>
-            Create a new <see cref="T:Coded.Core.Validation.IoValidationHandlerDecorator`2"/>
+                Create a new <see cref="T:Coded.Core.Validation.IoValidationHandlerDecorator`2" />
             </summary>
             <param name="decoratedQuery">The query to decorate.</param>
             <param name="queryArgumentsValidator">The validator for the query arguments.</param>
@@ -343,15 +366,15 @@
         </member>
         <member name="T:Coded.Core.Validation.IValidator`1">
             <summary>
-            Validator for type <typeparamref name="T"/>
+                Validator for type <typeparamref name="T" />
             </summary>
             <typeparam name="T">The type to validate.</typeparam>
         </member>
         <member name="M:Coded.Core.Validation.IValidator`1.Validate(`0)">
             <summary>
-            Validate the instance
+                Validate the instance
             </summary>
-            <param name="instance">The instance to validate</param>
+            <param name="rootObject">The instance to validate</param>
         </member>
     </members>
 </doc>

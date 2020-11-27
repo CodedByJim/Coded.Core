@@ -32,7 +32,6 @@ namespace Coded.Core.Data
             _connectionFactory = connectionFactory;
         }
 
-
         /// <inheritdoc />
         public void Commit()
         {
@@ -197,7 +196,15 @@ namespace Coded.Core.Data
         /// </summary>
         ~DapperUnitOfWork()
         {
-            Dispose();
+            try
+            {
+                Dispose();
+            }
+            catch (Exception)
+            {
+                // Disposing a SQLite tx throws exceptions
+                // if the connection is already disposed.
+            }
         }
     }
 }

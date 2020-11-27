@@ -49,7 +49,6 @@ namespace Coded.Core.Data
             CommandType? commandType = null,
             CommandFlags flags = CommandFlags.Buffered);
 
-
         /// <summary>
         ///     Execute a query and return the records.
         /// </summary>

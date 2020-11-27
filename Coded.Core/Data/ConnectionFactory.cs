@@ -20,7 +20,6 @@ namespace Coded.Core.Data
             _connectionString = connectionString;
         }
 
-
         /// <inheritdoc />
         public IDbConnection CreateConnection()
         {
