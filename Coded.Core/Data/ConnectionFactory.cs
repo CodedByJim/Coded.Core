@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 
 namespace Coded.Core.Data
@@ -17,7 +18,7 @@ namespace Coded.Core.Data
         /// <param name="connectionString"></param>
         public ConnectionFactory(string connectionString)
         {
-            _connectionString = connectionString;
+            _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
         /// <inheritdoc />

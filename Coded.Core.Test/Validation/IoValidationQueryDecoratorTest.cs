@@ -18,10 +18,10 @@ namespace Coded.Core.Test.Validation
 
         public IoValidationQueryDecoratorTest()
         {
-            _innerQuery = new Mock<IQuery<TestRequest, TestResponse>>();
-            _requestValidator = new Mock<IValidator<TestRequest>>();
-            _responseValidator = new Mock<IValidator<TestResponse>>();
-            _ioValidation = new IoValidationQueryDecorator<TestRequest, TestResponse>(
+            _innerQuery = new();
+            _requestValidator = new();
+            _responseValidator = new();
+            _ioValidation = new(
                 _innerQuery.Object,
                 _requestValidator.Object,
                 _responseValidator.Object);
@@ -31,10 +31,10 @@ namespace Coded.Core.Test.Validation
         public async Task Decorator_ValidatesInputAndOutput()
         {
             //Arrange
-            var result = new TestResponse();
+            TestResponse result = new();
             _innerQuery.SetupQuery(_ => result);
 
-            var queryArgs = new TestRequest();
+            TestRequest queryArgs = new();
 
             //Act
             await _ioValidation.Query(queryArgs, CancellationToken.None);
@@ -49,7 +49,7 @@ namespace Coded.Core.Test.Validation
         public async Task Decorator_DoesntValidateNulls()
         {
             //Arrange
-            var args = new TestRequest();
+            TestRequest args = new();
             _innerQuery.SetupQuery(_ => null);
 
             //Act
@@ -66,7 +66,7 @@ namespace Coded.Core.Test.Validation
         {
             //Act, Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
-                () => _ioValidation.Query(null, CancellationToken.None)
+                () => _ioValidation.Query(null!, CancellationToken.None)
             );
         }
     }

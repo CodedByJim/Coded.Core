@@ -16,9 +16,9 @@ namespace Coded.Core.Test.Events
 
         public FlushEventBusDecoratorTest()
         {
-            _eventBust = new Mock<IEventBus>();
-            _innerHandler = new Mock<IHandler<TestRequest, TestResponse>>();
-            _decorator = new FlushEventBusDecorator<TestRequest, TestResponse>(
+            _eventBust = new();
+            _innerHandler = new();
+            _decorator = new(
                 _innerHandler.Object,
                 _eventBust.Object);
         }
@@ -27,10 +27,10 @@ namespace Coded.Core.Test.Events
         public async Task Decorator_FlushesEventBus()
         {
             //Arrange
-            var response = new TestResponse();
+            TestResponse response = new();
             _innerHandler.SetupHandle(_ => response);
 
-            var request = new TestRequest();
+            TestRequest request = new();
 
             //Act
             await _decorator.Handle(request, CancellationToken.None);

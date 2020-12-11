@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -12,7 +13,8 @@ namespace Coded.Core.Validation
     /// <typeparam name="TRequest">The request type</typeparam>
     /// <typeparam name="TResponse">The response type</typeparam>
     public class IoValidationHandlerDecorator<TRequest, TResponse> : IHandler<TRequest, TResponse>
-        where TRequest : IRequest<TResponse> where TResponse : class, new()
+        where TRequest : IRequest<TResponse>, IEquatable<TRequest>
+        where TResponse : class, IEquatable<TResponse>, new()
     {
         private readonly IHandler<TRequest, TResponse> _decoratedHandler;
         private readonly IValidator<TRequest> _requestValidator;
@@ -26,19 +28,20 @@ namespace Coded.Core.Validation
         /// <param name="responseValidator">The validator for the response type</param>
         public IoValidationHandlerDecorator(IHandler<TRequest, TResponse> decoratedHandler, IValidator<TRequest> requestValidator, IValidator<TResponse> responseValidator)
         {
-            _decoratedHandler = decoratedHandler;
-            _requestValidator = requestValidator;
-            _responseValidator = responseValidator;
+            _decoratedHandler = decoratedHandler ?? throw new ArgumentNullException(nameof(decoratedHandler));
+            _requestValidator = requestValidator ?? throw new ArgumentNullException(nameof(requestValidator));
+            _responseValidator = responseValidator ?? throw new ArgumentNullException(nameof(responseValidator));
         }
 
         /// <inheritdoc />
         [DebuggerStepThrough]
-        public async Task<TResponse> Handle([DisallowNull] TRequest request, CancellationToken cancellationToken)
+        public async Task<TResponse?> Handle([DisallowNull] TRequest request, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            if (request != null)
-                _requestValidator.Validate(request);
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
 
+            _requestValidator.Validate(request);
             var response = await _decoratedHandler.Handle(request, cancellationToken);
 
             if (response != null)

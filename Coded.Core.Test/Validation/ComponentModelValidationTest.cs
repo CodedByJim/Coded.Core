@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
 using Coded.Core.Validation;
 using Xunit;
@@ -6,18 +7,13 @@ namespace Coded.Core.Test.Validation
 {
     public class ComponentModelValidationTest
     {
-        private readonly ComponentModelValidator<TestRecord> _componentModelValidator;
-
-        public ComponentModelValidationTest()
-        {
-            _componentModelValidator = new ComponentModelValidator<TestRecord>();
-        }
+        private readonly ComponentModelValidator<TestRecord> _componentModelValidator = new();
 
         [Fact(DisplayName = "Correct input doesn't throw.")]
         public void ValidInput_Does_Not_Throw()
         {
             //Arrange
-            var rootObject = new TestRecord
+            TestRecord rootObject = new()
             {
                 Id = 1,
                 Value = "test"
@@ -31,7 +27,7 @@ namespace Coded.Core.Test.Validation
         public void InvalidInput_Throws()
         {
             //Arrange
-            var rootObject = new TestRecord
+            TestRecord rootObject = new()
             {
                 Id = 1000,
                 Value = null
@@ -46,11 +42,11 @@ namespace Coded.Core.Test.Validation
         public void NestedObject_GetValidated()
         {
             //Arrange
-            var rootObject = new TestRecord
+            TestRecord rootObject = new()
             {
                 Id = 100,
                 Value = "abc",
-                NestedObject = new TestRecord
+                NestedObject = new()
                 {
                     Id = 1000,
                     Value = null
@@ -66,7 +62,7 @@ namespace Coded.Core.Test.Validation
         public void NestedEnumerable_GetValidated()
         {
             //Arrange
-            var rootObject = new TestRecord
+            TestRecord rootObject = new()
             {
                 Id = 100,
                 Value = "abc",
@@ -88,7 +84,7 @@ namespace Coded.Core.Test.Validation
         public void Loops_GetValidated()
         {
             //Arrange
-            var rootObject = new TestRecord
+            TestRecord rootObject = new()
             {
                 Id = 100,
                 Value = "abc",
@@ -105,13 +101,16 @@ namespace Coded.Core.Test.Validation
             rootObject.NestedObjects[0].NestedObject = rootObject;
 
             //Act
+            ConcurrentQueue<TestRecord> validationQueue = new();
+            validationQueue.Enqueue(rootObject);
+
             _componentModelValidator.Validate(rootObject);
         }
 
         [Fact(DisplayName = "Validator handles null input.")]
         public void Null_GetsValidated()
         {
-            _componentModelValidator.Validate(null);
+            _componentModelValidator.Validate(null!);
         }
     }
 }

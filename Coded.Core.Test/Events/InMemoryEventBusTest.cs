@@ -16,10 +16,10 @@ namespace Coded.Core.Test.Events
 
         public InMemoryEventBusTest()
         {
-            _mockConsumer1 = new Mock<IConsumer<TestRecord>>();
-            _mockConsumer2 = new Mock<IConsumer<TestRecord>>();
+            _mockConsumer1 = new();
+            _mockConsumer2 = new();
 
-            var container = new Container();
+            Container container = new();
             container.Collection.Register(typeof(IConsumer<TestRecord>),
                 new[]
                 {
@@ -28,7 +28,7 @@ namespace Coded.Core.Test.Events
                 });
             container.Verify();
 
-            _eventBus = new InMemoryEventBus(container);
+            _eventBus = new(container);
         }
 
         [Fact(DisplayName = "Event gets published.")]
@@ -46,11 +46,11 @@ namespace Coded.Core.Test.Events
             _mockConsumer1.Setup(x => x.ConsumeAsync(
                     It.IsAny<TestRecord>(),
                     CancellationToken.None))
-                .Throws(new Exception("Exception1"));
+                .Throws(new("Exception1"));
             _mockConsumer2.Setup(x => x.ConsumeAsync(
                     It.IsAny<TestRecord>(),
                     CancellationToken.None))
-                .Throws(new Exception("Exception2"));
+                .Throws(new("Exception2"));
 
             await _eventBus.PublishAsync(
                 new TestRecord(),
@@ -69,13 +69,13 @@ namespace Coded.Core.Test.Events
         public async Task Events_GetConsumed()
         {
             //Arrange
-            var testEvent1 = new TestRecord
+            TestRecord testEvent1 = new()
             {
                 Id = 123,
                 Value = "Value1"
             };
 
-            var testEvent2 = new TestRecord
+            TestRecord testEvent2 = new()
             {
                 Id = 456,
                 Value = "Value2"

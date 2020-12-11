@@ -19,27 +19,24 @@ namespace Coded.Core.Validation
         public void Validate(T rootObject)
         {
             if (rootObject == null) return;
-
-            var validationQueue = new ConcurrentQueue<object>();
+            ConcurrentQueue<object> validationQueue = new();
             validationQueue.Enqueue(rootObject);
-            var known = new List<object>();
-
+            List<object> known = new();
             while (validationQueue.TryDequeue(out var objectToValidate))
                 ValidateItem(objectToValidate, validationQueue, known);
         }
 
-        private static void ValidateItem(object objectToValidate, ConcurrentQueue<object> validationQueue, List<object> known)
+        private static void ValidateItem(object objectToValidate, ConcurrentQueue<object> validationQueue, ICollection<object> known)
         {
             PreprocessObject(objectToValidate, validationQueue, known, out var shouldBeValidated);
-            
+
             if (!shouldBeValidated)
                 return;
 
             //Do the actual validation.
             Validator.ValidateObject(objectToValidate,
-                new ValidationContext(objectToValidate),
+                new(objectToValidate),
                 true);
-
             ValidateNestedItems(objectToValidate, validationQueue);
         }
 
@@ -51,7 +48,7 @@ namespace Coded.Core.Validation
         {
             shouldBeValidated = true;
 
-            if (objectToValidate == null || known.Contains(objectToValidate))
+            if (known.Any(knownItem => knownItem == objectToValidate))
             {
                 shouldBeValidated = false;
                 return;
@@ -63,12 +60,15 @@ namespace Coded.Core.Validation
             var underlyingType = Nullable.GetUnderlyingType(objectType) ?? objectType;
 
             if (objectToValidate is string || underlyingType.IsPrimitive || underlyingType.IsValueType)
+            {
                 shouldBeValidated = false;
+            }
             else if (objectToValidate is IEnumerable list)
             {
-                foreach (var listItem in list)
-                    validationQueue.Enqueue(listItem);
                 shouldBeValidated = false;
+                foreach (var listItem in list)
+                    if (listItem != null)
+                        validationQueue.Enqueue(listItem);
             }
         }
 
@@ -80,7 +80,8 @@ namespace Coded.Core.Validation
             foreach (var property in properties)
             {
                 var nestedValue = property.GetValue(objectToValidate);
-                validationQueue.Enqueue(nestedValue);
+                if (nestedValue != null)
+                    validationQueue.Enqueue(nestedValue);
             }
         }
     }

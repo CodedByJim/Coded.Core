@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Coded.Core.Handler;
@@ -17,10 +18,10 @@ namespace Coded.Core.Test.Validation
 
         public IoValidationHandlerDecoratorTest()
         {
-            _innerHandler = new Mock<IHandler<TestRequest, TestResponse>>();
-            _requestValidator = new Mock<IValidator<TestRequest>>();
-            _responseValidator = new Mock<IValidator<TestResponse>>();
-            _ioValidation = new IoValidationHandlerDecorator<TestRequest, TestResponse>(
+            _innerHandler = new();
+            _requestValidator = new();
+            _responseValidator = new();
+            _ioValidation = new(
                 _innerHandler.Object,
                 _requestValidator.Object,
                 _responseValidator.Object);
@@ -30,10 +31,10 @@ namespace Coded.Core.Test.Validation
         public async Task Decorator_ValidatesInputAndOutput()
         {
             //Arrange
-            var response = new TestResponse();
+            TestResponse response = new();
             _innerHandler.SetupHandle(_ => response);
 
-            var request = new TestRequest();
+            TestRequest request = new();
 
             //Act
             await _ioValidation.Handle(request, CancellationToken.None);
@@ -47,14 +48,13 @@ namespace Coded.Core.Test.Validation
         [Fact(DisplayName = "Decorator doesn't validate null values.")]
         public async Task Decorator_DoesntValidateNulls()
         {
-            //Arrange
-            _innerHandler.SetupHandle(_ => null);
-
             //Act
-            await _ioValidation.Handle(null, CancellationToken.None);
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                _ioValidation.Handle(null!, CancellationToken.None)
+            );
 
             //Assert
-            _innerHandler.Verify(x => x.Handle(null, CancellationToken.None));
+            _innerHandler.VerifyNoOtherCalls();
             _requestValidator.VerifyNoOtherCalls();
             _responseValidator.VerifyNoOtherCalls();
         }

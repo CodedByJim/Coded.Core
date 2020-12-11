@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
@@ -16,22 +17,22 @@ namespace Coded.Core.Test.Data
 
         public DapperUnitOfWorkTest()
         {
-            _connection = new SQLiteConnection
+            _connection = new()
             {
                 ConnectionString = "Data Source=:memory:;Version=3;New=True;"
             };
-            var connectionFactory = new Mock<IConnectionFactory>();
+            Mock<IConnectionFactory> connectionFactory = new();
             connectionFactory
                 .Setup(x => x.CreateConnection())
                 .Returns(_connection);
-            _dapperUnitOfWork = new DapperUnitOfWork(connectionFactory.Object);
+            _dapperUnitOfWork = new(connectionFactory.Object);
         }
 
         [Fact(DisplayName = "Creating a dapper unit of work without connection factory throws ArgumentNullException.")]
         public void Constructor_ConnectionNull_Throws()
         {
             Assert.Throws<ArgumentNullException>(
-                () => new DapperUnitOfWork(null));
+                () => new DapperUnitOfWork(null!));
         }
 
         [Fact(DisplayName = "Closes even if the connection is null.")]
@@ -114,8 +115,8 @@ namespace Coded.Core.Test.Data
                 CancellationToken.None);
 
             //Assert
-            Assert.Equal(12345, result.Id);
-            Assert.Equal("test", result.Value);
+            Assert.Equal(12345, result?.Id);
+            Assert.Equal("test", result?.Value);
         }
 
         [Fact(DisplayName = "Can execute multirow query")]
@@ -129,11 +130,11 @@ namespace Coded.Core.Test.Data
 
             //Assert
             Assert.NotNull(result);
-            Assert.NotEmpty(result);
-            Assert.Equal(12345, result[0].Id);
-            Assert.Equal("test", result[0].Value);
-            Assert.Equal(67890, result[1].Id);
-            Assert.Equal("item", result[1].Value);
+            Assert.NotEmpty(result!);
+            Assert.Equal(12345, result?[0].Id);
+            Assert.Equal("test", result?[0].Value);
+            Assert.Equal(67890, result?[1].Id);
+            Assert.Equal("item", result?[1].Value);
         }
     }
 }

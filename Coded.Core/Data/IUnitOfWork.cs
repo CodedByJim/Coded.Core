@@ -25,7 +25,7 @@ namespace Coded.Core.Data
         Task<int> ExecuteAsync(
             string sql,
             CancellationToken cancellationToken,
-            object param = null,
+            object? param = null,
             int? commandTimeout = null,
             CommandType? commandType = null,
             CommandFlags flags = CommandFlags.Buffered);
@@ -41,10 +41,10 @@ namespace Coded.Core.Data
         /// <param name="flags">Command flags</param>
         /// <typeparam name="T">The scalar result type</typeparam>
         /// <returns>A single value of type <typeparamref name="T" />.</returns>
-        Task<T> ExecuteScalarAsync<T>(
+        Task<T?> ExecuteScalarAsync<T>(
             string sql,
             CancellationToken cancellationToken,
-            object param = null,
+            object? param = null,
             int? commandTimeout = null,
             CommandType? commandType = null,
             CommandFlags flags = CommandFlags.Buffered);
@@ -60,10 +60,10 @@ namespace Coded.Core.Data
         /// <param name="flags">Command flags</param>
         /// <typeparam name="T">Record type</typeparam>
         /// <returns>The result of the given query as an <see cref="IEnumerable{T}" /> of type <typeparamref name="T" />.</returns>
-        Task<IEnumerable<T>> QueryAsync<T>(
+        Task<IEnumerable<T>?> QueryAsync<T>(
             string sql,
             CancellationToken cancellationToken,
-            object param = null,
+            object? param = null,
             int? commandTimeout = null,
             CommandType? commandType = null,
             CommandFlags flags = CommandFlags.Buffered);
@@ -79,10 +79,10 @@ namespace Coded.Core.Data
         /// <param name="flags">Command flags</param>
         /// <typeparam name="T">Record type</typeparam>
         /// <returns>The result of the given query as an <see cref="IEnumerable{T}" /> of type <typeparamref name="T" />.</returns>
-        Task<T> QuerySingleOrDefaultAsync<T>(
+        Task<T?> QuerySingleOrDefaultAsync<T>(
             string sql,
             CancellationToken cancellationToken,
-            object param = null,
+            object? param = null,
             int? commandTimeout = null,
             CommandType? commandType = null,
             CommandFlags flags = CommandFlags.Buffered);

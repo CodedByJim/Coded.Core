@@ -14,10 +14,10 @@ namespace Coded.Core.Data
     public class DapperUnitOfWork : IUnitOfWork
     {
         private readonly IConnectionFactory _connectionFactory;
-        private readonly object _connectionLock = new object();
-        private readonly List<Task> _pendingQueries = new List<Task>();
-        private IDbConnection _connection;
-        private IDbTransaction _currentTransaction;
+        private readonly object _connectionLock = new();
+        private readonly List<Task> _pendingQueries = new();
+        private IDbConnection? _connection;
+        private IDbTransaction? _currentTransaction;
         private bool _disposed;
 
         /// <summary>
@@ -27,9 +27,7 @@ namespace Coded.Core.Data
         /// <exception cref="ArgumentNullException">if the connection factory is null</exception>
         public DapperUnitOfWork(IConnectionFactory connectionFactory)
         {
-            if (connectionFactory == null)
-                throw new ArgumentNullException(nameof(connectionFactory));
-            _connectionFactory = connectionFactory;
+            _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
         }
 
         /// <inheritdoc />
@@ -70,86 +68,86 @@ namespace Coded.Core.Data
         public Task<int> ExecuteAsync(
             string sql,
             CancellationToken cancellationToken,
-            object param = null,
+            object? param = null,
             int? commandTimeout = null,
             CommandType? commandType = null,
             CommandFlags flags = CommandFlags.Buffered)
         {
             var tx = GetCurrentTransaction();
-            var cmd = new CommandDefinition(sql,
+            CommandDefinition cmd = new(sql,
                 param,
                 tx,
                 commandTimeout,
                 commandType,
                 flags,
                 cancellationToken);
-            var task = tx.Connection.ExecuteAsync(cmd);
+            Task<int>? task = tx.Connection.ExecuteAsync(cmd);
             _pendingQueries.Add(task);
             return task;
         }
 
         /// <inheritdoc />
-        public Task<T> ExecuteScalarAsync<T>(
+        public Task<T?> ExecuteScalarAsync<T>(
             string sql,
             CancellationToken cancellationToken,
-            object param = null,
+            object? param = null,
             int? commandTimeout = null,
             CommandType? commandType = null,
             CommandFlags flags = CommandFlags.Buffered)
         {
             var tx = GetCurrentTransaction();
-            var cmd = new CommandDefinition(sql,
+            CommandDefinition cmd = new(sql,
                 param,
                 tx,
                 commandTimeout,
                 commandType,
                 flags,
                 cancellationToken);
-            var task = tx.Connection.ExecuteScalarAsync<T>(cmd);
+            Task<T?>? task = tx.Connection.ExecuteScalarAsync<T?>(cmd);
             _pendingQueries.Add(task);
             return task;
         }
 
         /// <inheritdoc />
-        public Task<T> QuerySingleOrDefaultAsync<T>(
+        public Task<T?> QuerySingleOrDefaultAsync<T>(
             string sql,
             CancellationToken cancellationToken,
-            object parameters = null,
+            object? parameters = null,
             int? commandTimeout = null,
             CommandType? commandType = null,
             CommandFlags flags = CommandFlags.Buffered)
         {
             var tx = GetCurrentTransaction();
-            var cmd = new CommandDefinition(sql,
+            CommandDefinition cmd = new(sql,
                 parameters,
                 tx,
                 commandTimeout,
                 commandType,
                 flags,
                 cancellationToken);
-            var task = tx.Connection.QuerySingleOrDefaultAsync<T>(cmd);
+            Task<T?>? task = tx.Connection.QuerySingleOrDefaultAsync<T?>(cmd);
             _pendingQueries.Add(task);
             return task;
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<T>> QueryAsync<T>(
+        public Task<IEnumerable<T>?> QueryAsync<T>(
             string sql,
             CancellationToken cancellationToken,
-            object param = null,
+            object? param = null,
             int? commandTimeout = null,
             CommandType? commandType = null,
             CommandFlags flags = CommandFlags.Buffered)
         {
             var tx = GetCurrentTransaction();
-            var cmd = new CommandDefinition(sql,
+            CommandDefinition cmd = new(sql,
                 param,
                 tx,
                 commandTimeout,
                 commandType,
                 flags,
                 cancellationToken);
-            var task = tx.Connection.QueryAsync<T>(cmd);
+            Task<IEnumerable<T>?> task = tx.Connection.QueryAsync<T>(cmd);
             _pendingQueries.Add(task);
             return task;
         }
@@ -188,7 +186,7 @@ namespace Coded.Core.Data
                 _currentTransaction ??= _connection?.BeginTransaction();
             }
 
-            return _currentTransaction ?? throw new Exception("No transaction could be created.");
+            return _currentTransaction ?? throw new("No transaction could be created.");
         }
 
         /// <summary>

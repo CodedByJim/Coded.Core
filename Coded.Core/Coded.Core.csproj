@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
         <LangVersion>preview</LangVersion>
         <Title>Core architecture patterns</Title>
         <Authors>CODED by Jim</Authors>
@@ -10,6 +10,7 @@
         <PackageLicenseUrl>https://github.com/CodedByJim/Coded.Core/blob/main/LICENSE</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/CodedByJim/Coded.Core</RepositoryUrl>
         <RepositoryType>Git</RepositoryType>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

@@ -10,7 +10,7 @@ namespace Coded.Core.Test.Data
 
         public ConnectionFactoryTest()
         {
-            _connectionFactory = new ConnectionFactory<SQLiteConnection>("connection string");
+            _connectionFactory = new("connection string");
         }
 
         [Fact(DisplayName = "Connection factory creates a connection with the given connection string.")]

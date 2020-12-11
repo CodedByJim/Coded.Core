@@ -1,4 +1,5 @@
-﻿using Coded.Core.Query;
+﻿using System;
+using Coded.Core.Query;
 
 namespace Coded.Core.Handler
 {
@@ -7,7 +8,7 @@ namespace Coded.Core.Handler
     /// </summary>
     /// <typeparam name="TResponse"></typeparam>
     public interface IRequest<TResponse> : IQueryArguments<TResponse>
-        where TResponse : class, new()
+        where TResponse : class, IEquatable<TResponse>, new()
     {
     }
 }

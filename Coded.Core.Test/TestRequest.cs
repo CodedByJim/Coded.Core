@@ -2,7 +2,7 @@ using Coded.Core.Handler;
 
 namespace Coded.Core.Test
 {
-    public class TestRequest : IRequest<TestResponse>
+    public sealed record TestRequest : IRequest<TestResponse>
     {
     }
 }

@@ -13,8 +13,8 @@ namespace Coded.Core.Validation
     /// <typeparam name="TQueryArguments">The query argument type</typeparam>
     /// <typeparam name="TResult">The query result type</typeparam>
     public class IoValidationQueryDecorator<TQueryArguments, TResult> : IQuery<TQueryArguments, TResult>
-        where TQueryArguments : class, IQueryArguments<TResult>
-        where TResult : class, new()
+        where TQueryArguments : class, IQueryArguments<TResult>, IEquatable<TQueryArguments>
+        where TResult : class, IEquatable<TResult>, new()
     {
         private readonly IQuery<TQueryArguments, TResult> _decoratedQuery;
         private readonly IValidator<TQueryArguments> _queryArgumentsValidator;
@@ -36,14 +36,18 @@ namespace Coded.Core.Validation
 
         /// <inheritdoc />
         [DebuggerStepThrough]
-        public async Task<TResult> Query([DisallowNull] TQueryArguments arguments, CancellationToken cancellationToken)
+        public async Task<TResult?> Query([DisallowNull] TQueryArguments arguments, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            if (arguments == null) throw new ArgumentNullException(nameof(arguments));
+            if (arguments == null)
+                throw new ArgumentNullException(nameof(arguments));
+
             _queryArgumentsValidator.Validate(arguments);
             var result = await _decoratedQuery.Query(arguments, cancellationToken);
 
-            if (result != null) _queryResultValidator.Validate(result);
+            if (result != null)
+                _queryResultValidator.Validate(result);
+
             return result;
         }
     }

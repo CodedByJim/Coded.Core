@@ -20,9 +20,9 @@ namespace Coded.Core.Testing
         /// <typeparam name="TResponse">The response type.</typeparam>
         public static void SetupHandle<TRequest, TResponse>(
             this Mock<IHandler<TRequest, TResponse>> handlerMock,
-            Func<TRequest, TResponse> mockMethod)
-            where TRequest : IRequest<TResponse>
-            where TResponse : class, new()
+            Func<TRequest, TResponse?> mockMethod)
+            where TRequest : IRequest<TResponse>, IEquatable<TRequest>
+            where TResponse : class, IEquatable<TResponse>, new()
         {
             handlerMock
                 .Setup(handler => handler.Handle(It.IsAny<TRequest>(), It.IsAny<CancellationToken>()))
@@ -38,9 +38,9 @@ namespace Coded.Core.Testing
         /// <typeparam name="TQueryResult">The query result type.</typeparam>
         public static void SetupQuery<TQueryArguments, TQueryResult>(
             this Mock<IQuery<TQueryArguments, TQueryResult>> queryMock,
-            Func<TQueryArguments, TQueryResult> mockMethod)
-            where TQueryArguments : class, IQueryArguments<TQueryResult>
-            where TQueryResult : class, new()
+            Func<TQueryArguments, TQueryResult?> mockMethod)
+            where TQueryArguments : class, IQueryArguments<TQueryResult>, IEquatable<TQueryArguments>
+            where TQueryResult : class, IEquatable<TQueryResult>, new()
         {
             queryMock
                 .Setup(query =>

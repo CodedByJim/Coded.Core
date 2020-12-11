@@ -1,4 +1,5 @@
 using System.Threading;
+using System.Threading.Tasks;
 using Coded.Core.Data;
 using Coded.Core.Handler;
 using Coded.Core.Testing;
@@ -15,19 +16,19 @@ namespace Coded.Core.Test.Data
 
         public UnitOfWorkScopeTest()
         {
-            _decoratedHandler = new Mock<IHandler<TestRequest, TestResponse>>();
-            _unitOfWork = new Mock<IUnitOfWork>();
-            _unitOfWorkScope = new UnitOfWorkScope<TestRequest, TestResponse>(_decoratedHandler.Object, _unitOfWork.Object);
+            _decoratedHandler = new();
+            _unitOfWork = new();
+            _unitOfWorkScope = new(_decoratedHandler.Object, _unitOfWork.Object);
         }
 
         [Fact(DisplayName = "Unit of work scope handles, then commits, closes and disposes")]
         public void TestUnitOfWorkScope()
         {
             //Arrange
-            _decoratedHandler.SetupHandle(x => new TestResponse());
+            _decoratedHandler.SetupHandle(_ => new());
 
             //Act
-            var result = _unitOfWorkScope.Handle(new TestRequest(), CancellationToken.None);
+            Task<TestResponse?> result = _unitOfWorkScope.Handle(new(), CancellationToken.None);
 
             //Assert
             Assert.NotNull(result);

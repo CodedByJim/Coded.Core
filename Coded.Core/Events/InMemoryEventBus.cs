@@ -15,7 +15,7 @@ namespace Coded.Core.Events
     public class InMemoryEventBus : IEventBus
     {
         private readonly Container _container;
-        private readonly ConcurrentQueue<object> _eventQueue = new ConcurrentQueue<object>();
+        private readonly ConcurrentQueue<object> _eventQueue = new();
 
         /// <summary>
         ///     Create a new <see cref="InMemoryEventBus" />.
@@ -23,6 +23,8 @@ namespace Coded.Core.Events
         /// <param name="container"></param>
         public InMemoryEventBus(Container container)
         {
+            if (container == null)
+                throw new ArgumentNullException(nameof(container));
             _container = container;
         }
 
@@ -30,21 +32,22 @@ namespace Coded.Core.Events
         public async Task StartConsumingAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var exceptions = new List<Exception>();
+            List<Exception> exceptions = new();
 
-            while (_eventQueue.Count > 0)
+            while (!_eventQueue.IsEmpty)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
                 if (_eventQueue.TryDequeue(out var eventData))
-                    await ConsumeEvent(cancellationToken, eventData, exceptions);
+                    await ConsumeEvent(eventData, exceptions, cancellationToken);
             }
 
             if (exceptions.Any()) throw new AggregateException(exceptions);
         }
 
         /// <inheritdoc />
-        public Task PublishAsync<TEvent>(TEvent eventObject, CancellationToken cancellationToken) where TEvent : class
+        public Task PublishAsync<TEvent>(TEvent eventObject, CancellationToken cancellationToken)
+            where TEvent : class
         {
             cancellationToken.ThrowIfCancellationRequested();
             _eventQueue.Enqueue(eventObject);
@@ -58,17 +61,17 @@ namespace Coded.Core.Events
             return StartConsumingAsync(cancellationToken);
         }
 
-        private async Task ConsumeEvent(CancellationToken cancellationToken, object eventData, ICollection<Exception> exceptions)
+        private async Task ConsumeEvent(object eventData, ICollection<Exception> exceptions, CancellationToken cancellationToken)
         {
             var type = typeof(IConsumer<>).MakeGenericType(eventData.GetType());
             var enumerableOfType = typeof(IEnumerable<>).MakeGenericType(type);
 
             if (_container.GetInstance(enumerableOfType) is IEnumerable consumers)
                 foreach (dynamic consumer in consumers)
-                    await CallConsumer(cancellationToken, eventData, exceptions, consumer);
+                    await CallConsumer(eventData, exceptions, consumer, cancellationToken);
         }
 
-        private static async Task CallConsumer(CancellationToken cancellationToken, object eventData, ICollection<Exception> exceptions, dynamic consumer)
+        private static async Task CallConsumer(object eventData, ICollection<Exception> exceptions, dynamic consumer, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             try
